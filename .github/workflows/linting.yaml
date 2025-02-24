@@ -1,0 +1,29 @@
+name: Run Python linting
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ "3.12.0", "3.13.0" ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+        
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pylint
+        run: |
+          pylint src tests
